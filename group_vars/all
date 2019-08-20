@@ -4,8 +4,8 @@ http_port: 8080
 https_port: 8443
 
 # OS user
-os_username = user
-os_group = user
+# os_username: user name! change it
+# os_group: user name! change it
 
 # This will configure a default manager-gui user:
 admin_username: admin

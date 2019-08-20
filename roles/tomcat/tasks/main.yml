@@ -2,8 +2,8 @@
 - name: Install Java 1.8
   yum: name=java-1.8.0-openjdk state=present
 
-- name: add group {{os_group}}
-  group: name={{os_group}}
+- name: add group "{{ os_group }}"
+  group: name="{{os_group}}"
 
 - name: add user {{os_username}}
   user: name={{os_username}} group={{os_group}} home=/usr/share/{{os_username}} createhome=yes
@@ -36,12 +36,19 @@
   file:
       path: "{{item}}"
       state: directory
-      owner: {{os_username}}
-      group: {{os_group}}
+      owner: "{{os_username}}"
+      group: "{{os_group}}"
+      mode: 0777
       recurse: yes
   with_items:
       - /opt/software
       - /opt/software/apache-tomcat-8.5.43
+
+- name: set files launchable
+  file:
+      path: /opt/software/apache-tomcat-8.5.43/bin/
+      mode: 0775
+      recurse: yes
 
 - name: Symlink install directory
   file:
@@ -49,17 +56,32 @@
       path: /usr/share/tomcat
       state: link
 
-- name: Configure Tomcat server
-  template:
-      src: server.xml
-      dest: /usr/share/tomcat/conf/
+# - name: Configure Tomcat server
+#  template:
+#      src: server.xml
+#      dest: /usr/share/tomcat/conf/
 #  notify: restart tomcat
 
-- name: Install Tomcat init script
-  copy: src=tomcat-init.sh dest=/etc/init.d/tomcat mode=0755
+# TODO: current script does not have permissions to run. Need to investigate
+# - name: Install Tomcat init script
+#  template:
+#      src: tomcat.init.sh
+#      dest: /etc/init.d/tomcat
+#      mode: 0775
+
+- name: Install Tomcat init script alternative
+  template:
+      src: tomcat.service
+      dest: /etc/systemd/system/
+      mode: 0777
 
 - name: Start Tomcat
-  service: name=tomcat state=started enabled=yes
+  service:
+      name: tomcat
+      daemon_reload: yes
+      state: started
+      enabled: yes
 
 - name: wait for tomcat to start
-  wait_for: port={{http_port}}
+  wait_for:
+      port: "{{http_port}}"

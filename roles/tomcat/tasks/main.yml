@@ -2,11 +2,11 @@
 - name: Install Java 1.8
   yum: name=java-1.8.0-openjdk state=present
 
-- name: add group "bpa"
-  group: name=bpa
+- name: add group {{os_group}}
+  group: name={{os_group}}
 
-- name: add user "bpa"
-  user: name=bpa group=bpa home=/usr/share/bpa createhome=yes
+- name: add user {{os_username}}
+  user: name={{os_username}} group={{os_group}} home=/usr/share/{{os_username}} createhome=yes
   become: yes
   become_method: sudo
 
@@ -32,12 +32,12 @@
       path: /tmp/apache-tomcat-8.5.43.zip
       state: absent
 
-- name: set "bpa" user as owner
+- name: set {{os_username}} user as owner
   file:
       path: "{{item}}"
       state: directory
-      owner: bpa
-      group: bpa
+      owner: {{os_username}}
+      group: {{os_group}}
       recurse: yes
   with_items:
       - /opt/software
@@ -56,7 +56,7 @@
 #  notify: restart tomcat
 
 - name: Install Tomcat init script
-  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
+  copy: src=tomcat-init.sh dest=/etc/init.d/tomcat mode=0755
 
 - name: Start Tomcat
   service: name=tomcat state=started enabled=yes

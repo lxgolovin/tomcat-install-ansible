@@ -15,7 +15,6 @@
       path: /opt/software
       state: directory
       recurse: yes
-      mode: 0775
 
 - name: Download Tomcat 8.5.43
   get_url:
@@ -41,7 +40,6 @@
       mode: 0777
       recurse: yes
   with_items:
-      - /opt/software
       - /opt/software/apache-tomcat-8.5.43
 
 - name: set files launchable

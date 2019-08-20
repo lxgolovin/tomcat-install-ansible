@@ -56,11 +56,11 @@
       path: /usr/share/tomcat
       state: link
 
-# - name: Configure Tomcat server
-#  template:
-#      src: server.xml
-#      dest: /usr/share/tomcat/conf/
-#  notify: restart tomcat
+- name: Configure Tomcat server
+  template:
+      src: server.xml
+      dest: /usr/share/tomcat/conf/
+  notify: restart tomcat
 
 # TODO: current script does not have permissions to run. Need to investigate
 # - name: Install Tomcat init script

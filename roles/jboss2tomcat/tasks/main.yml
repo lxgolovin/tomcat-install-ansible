@@ -1,0 +1,26 @@
+- name: Switch apache2 configs
+  copy:
+      src: {{apache2_home}}/conf/httpd.conf.tomcat
+      dest: {{apache2_home}}/httpd.conf
+
+- name: Reload service httpd, in all cases
+  service:
+      name: httpd
+      state: reloaded
+
+- name: Stop jboss
+  shell: {{jboss_home}}/bin/jboss-cli.sh --connect command=shutdown
+    user: {{os_username}}
+    become: yes
+    become_method: sudo
+
+- name: Start Tomcat
+  service:
+      name: tomcat
+      daemon_reload: yes
+      state: started
+      enabled: yes
+
+- name: wait for tomcat to start
+  wait_for:
+      port: "{{http_port}}"

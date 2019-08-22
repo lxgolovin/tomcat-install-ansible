@@ -14,3 +14,4 @@ admin_password: adminsecret
 # directories
 apache2_home: /opt/software/apache-2.4.10
 jboss_home: /opt/software/jboss-eap-7.0
+tomcat_home: /opt/software/tomcat

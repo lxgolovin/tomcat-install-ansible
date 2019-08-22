@@ -1,7 +1,7 @@
 - name: Switch apache2 configs
   copy:
-      src: {{apache2_home}}/conf/httpd.conf.tomcat
-      dest: {{apache2_home}}/httpd.conf
+      src: '{{apache2_home}}/conf/httpd.conf.tomcat'
+      dest: '{{apache2_home}}/httpd.conf'
 
 - name: Reload service httpd, in all cases
   service:
